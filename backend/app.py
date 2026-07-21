@@ -197,6 +197,11 @@ def register():
 def report():
 
     if request.method == "POST":
+        print("====== REPORT RECEIVED ======")
+
+        print(request.form)
+
+        print(request.files)
 
         fullname = request.form["fullname"]
         mobile = request.form["mobile"]
