@@ -228,7 +228,10 @@ def report():
             )
 
         # ================= Save Image =================
+        UPLOAD_FOLDER = "static/uploads"
+        app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
         filename = secure_filename(image.filename)
 
         image.save(
