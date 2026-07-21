@@ -232,7 +232,10 @@ def report():
         app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
         os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+        print("UPLOAD FOLDER =", app.config["UPLOAD_FOLDER"])
+        print("FILE NAME =", image.filename)
         filename = secure_filename(image.filename)
+
 
         image.save(
             os.path.join(app.config["UPLOAD_FOLDER"], filename)
