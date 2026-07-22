@@ -210,6 +210,8 @@ def register():
 
 @app.route("/report", methods=["GET", "POST"])
 def report():
+    if "user_id" not in session:
+        return redirect("/login")
 
     if request.method == "POST":
         print("====== REPORT RECEIVED ======")
@@ -285,7 +287,7 @@ def report():
 @app.route("/dashboard")
 def dashboard():
 
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect("/login")
 
     search = request.args.get("search", "")
@@ -396,7 +398,7 @@ def dashboard():
 
     return render_template(
         "dashboard.html",
-        username=session["user"],
+        username=session["user_name"],
         total_reports=total_reports,
         total_users=total_users,
         pending_reports=pending_reports,
