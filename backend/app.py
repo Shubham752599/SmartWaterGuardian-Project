@@ -144,6 +144,11 @@ def login():
         )
 
         user = cur.fetchone()
+        print(user)
+
+        if user:
+           print(user[3])
+           print(password)
 
         cur.close()
         conn.close()
@@ -176,22 +181,31 @@ def register():
         conn = get_db()
         cur = conn.cursor()
 
-        cur.execute("""
-            INSERT INTO users(fullname, email,password)
-            VALUES(%s, %s, %s)
-        """, (fullname, email, hashed_password))
+        try:
+            cur.execute("""
+                INSERT INTO users(fullname, email, password)
+                VALUES(%s, %s, %s)
+            """, (fullname, email, hashed_password))
 
-        conn.commit()
+            conn.commit()
 
-        cur.close()
-        conn.close()
+            return render_template(
+                "register.html",
+                success="✅ Registration Successful!"
+            )
 
-        return render_template(
-            "register.html",
-            success="✅ Registration Successful!"
+        except Exception as e:
+           conn.rollback()
+
+           return render_template(
+                "register.html",
+                success=f"❌ {e}"
         )
 
-    return render_template("register.html")
+        finally:
+           cur.close()
+           conn.close()
+    return render_template("register.html")   
 
 @app.route("/report", methods=["GET", "POST"])
 def report():
