@@ -155,7 +155,8 @@ def login():
 
         if user and check_password_hash(user[3], password):
 
-           session["user"] = user[1]
+           session["user_id"] = user[0]
+           session["user_name"] = user[1]
 
            return redirect("/dashboard")
 
@@ -260,9 +261,10 @@ def report():
 
         cur.execute("""
         INSERT INTO reports
-        (fullname, mobile, address, city, leakage_type, description, image)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        (user_id, fullname, mobile, address, city, leakage_type, description, image)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
+            session["user_id"],
             fullname,
             mobile,
             address,
@@ -296,44 +298,60 @@ def dashboard():
     offset = (page - 1) * per_page
     conn = get_db()
     cur = conn.cursor()
-    # Total reports
-    cur.execute("SELECT COUNT(*) FROM reports")
-
+    # Total Reports (Current User)
+    cur.execute(
+       "SELECT COUNT(*) FROM reports WHERE user_id=%s",
+        (session["user_id"],)
+    )
     total_reports = cur.fetchone()[0]
 
-    # Total Users
+# Total Users (Admin wali value, isse waise hi rehne do)
     cur.execute("SELECT COUNT(*) FROM users")
     total_users = cur.fetchone()[0]
 
-    # Pending Reports
-    cur.execute("SELECT COUNT(*) FROM reports WHERE status='Pending'")
+# Pending Reports (Current User)
+    cur.execute(
+        "SELECT COUNT(*) FROM reports WHERE user_id=%s AND status='Pending'",
+        (session["user_id"],)
+    )
     pending_reports = cur.fetchone()[0]
 
-    # In Progress Reports
-    cur.execute("SELECT COUNT(*) FROM reports WHERE status='In Progress'")
+# In Progress Reports (Current User)
+    cur.execute(
+        "SELECT COUNT(*) FROM reports WHERE user_id=%s AND status='In Progress'",
+        (session["user_id"],)
+    )
     inprogress_reports = cur.fetchone()[0]
 
-    # Resolved Reports
-    cur.execute("SELECT COUNT(*) FROM reports WHERE status='Resolved'")
+# Resolved Reports (Current User)
+    cur.execute(
+        "SELECT COUNT(*) FROM reports WHERE user_id=%s AND status='Resolved'",
+        (session["user_id"],)
+    )
     resolved_reports = cur.fetchone()[0]
 
-    # City Wise Reports
+# City Wise Reports (Current User)
     cur.execute("""
         SELECT city, COUNT(*)
         FROM reports
+        WHERE user_id=%s
         GROUP BY city
         ORDER BY COUNT(*) DESC
-    """)
+    """, (session["user_id"],))
     city_data = cur.fetchall()
 
-    # Dynamic Query
+# ==========================
+# Dynamic Query
+# ==========================
+
     query = """
-        SELECT id, fullname, city, leakage_type, mobile, image, status,created_at
-        FROM reports
-        WHERE 1=1
+    SELECT id, fullname, city, leakage_type, mobile,
+           image, status, created_at
+    FROM reports
+    WHERE user_id=%s
     """
 
-    params = []
+    params = [session["user_id"]]
 
     if search:
         query += " AND (fullname LIKE %s OR city LIKE %s)"
@@ -349,7 +367,7 @@ def dashboard():
         params.append(date)
 
     if sort == "asc":
-       query += " ORDER BY id ASC"
+        query += " ORDER BY id ASC"
     else:
         query += " ORDER BY id DESC"
 
@@ -361,9 +379,16 @@ def dashboard():
     cur.execute(query, tuple(params))
     reports = cur.fetchall()
 
-    # Total Pages
-    cur.execute("SELECT COUNT(*) FROM reports")
+# ==========================
+# Total Pages
+# ==========================
+
+    cur.execute(
+        "SELECT COUNT(*) FROM reports WHERE user_id=%s",
+        (session["user_id"],)
+    )
     total = cur.fetchone()[0]
+
     pages = (total + per_page - 1) // per_page
 
     cur.close()
