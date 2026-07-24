@@ -158,6 +158,8 @@ def login():
            session["user_id"] = user[0]
            session["user_name"] = user[1]
            session["role"] = user[4]
+           if session["role"] == "admin":
+               return redirect("/admin")
 
            return redirect("/dashboard")
 
@@ -284,6 +286,68 @@ def report():
         return redirect("/dashboard")
 
     return render_template("report.html", success="")
+
+@app.route("/admin")
+def admin():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Total Users
+    cur.execute("SELECT COUNT(*) FROM users")
+    total_users = cur.fetchone()[0]
+
+    # Total Reports
+    cur.execute("SELECT COUNT(*) FROM reports")
+    total_reports = cur.fetchone()[0]
+
+    # Pending
+    cur.execute("SELECT COUNT(*) FROM reports WHERE status='Pending'")
+    pending = cur.fetchone()[0]
+
+    # In Progress
+    cur.execute("SELECT COUNT(*) FROM reports WHERE status='In Progress'")
+    inprogress = cur.fetchone()[0]
+
+    # Resolved
+    cur.execute("SELECT COUNT(*) FROM reports WHERE status='Resolved'")
+    resolved = cur.fetchone()[0]
+
+    # All Reports
+    cur.execute("""
+        SELECT id,
+               fullname,
+               city,
+               leakage_type,
+               mobile,
+               image,
+               status,
+               created_at
+        FROM reports
+        ORDER BY id DESC
+    """)
+
+    reports = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "admin.html",
+        username=session["user"],
+        total_users=total_users,
+        total_reports=total_reports,
+        pending=pending,
+        inprogress=inprogress,
+        resolved=resolved,
+        reports=reports
+    )
 
 @app.route("/dashboard")
 def dashboard():

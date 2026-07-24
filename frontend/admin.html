@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+    <h1>👑 Admin Dashboard</h1>
+
+    <h3>Welcome {{ username }}</h3>
+
+    <hr>
+
+    <h2>Statistics</h2>
+
+    <p>Total Users : {{ total_users }}</p>
+    <p>Total Reports : {{ total_reports }}</p>
+    <p>Pending : {{ pending }}</p>
+    <p>In Progress : {{ inprogress }}</p>
+    <p>Resolved : {{ resolved }}</p>
+
+    <hr>
+
+    <h2>All Reports</h2>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Leakage</th>
+            <th>Mobile</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+
+        {% for report in reports %}
+        <tr>
+            <td>{{ report[0] }}</td>
+            <td>{{ report[1] }}</td>
+            <td>{{ report[2] }}</td>
+            <td>{{ report[3] }}</td>
+            <td>{{ report[4] }}</td>
+            <td>{{ report[6] }}</td>
+            <td>{{ report[7] }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>
