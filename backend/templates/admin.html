@@ -61,6 +61,7 @@
             <th>Mobile</th>
             <th>Status</th>
             <th>Date</th>
+            <th>Action</th>
         </tr>
 
         {% for report in reports %}
@@ -94,6 +95,19 @@
 
             </td>
             <td>{{ report[7] }}</td>
+            <td>
+
+            <a href="/update_status/{{ report[0] }}" class="status-btn">
+            Change Status
+            </a>
+
+            <a href="/delete_report/{{ report[0] }}"
+            class="delete-btn"
+            onclick="return confirm('Delete this report?')">
+            Delete
+            </a>
+
+            </td>
             <td>
 
             <form action="/update_status/{{ report[0] }}" method="POST">

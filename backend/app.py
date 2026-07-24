@@ -500,24 +500,27 @@ def view_report(id):
         report=report
     )
 
-@app.route("/delete/<int:id>")
-def delete(id):
+@app.route("/delete_report/<int:id>")
+def delete_report(id):
 
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
 
     conn = get_db()
     cur = conn.cursor()
 
     cur.execute("DELETE FROM reports WHERE id=%s", (id,))
-
     conn.commit()
 
     cur.close()
     conn.close()
+
     flash("🗑 Report Deleted Successfully!", "success")
 
-    return redirect("/dashboard")
+    return redirect("/admin")
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit(id):
 
