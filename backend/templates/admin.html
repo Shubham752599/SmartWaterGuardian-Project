@@ -81,6 +81,45 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-5">
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h4 class="text-center">
+                    Report Status
+                </h4>
+
+                <canvas id="pieChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h4 class="text-center">
+                    Reports Overview
+                </h4>
+
+                <canvas id="barChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
     </div>
 
@@ -199,6 +238,54 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
 
+new Chart(document.getElementById("pieChart"),{
+
+type:"pie",
+
+data:{
+
+labels:["Pending","In Progress","Resolved"],
+
+datasets:[{
+
+data:[
+{ pending },
+{ inprogress },
+{ resolved }
+]
+
+}]
+
+}
+
+});
+
+new Chart(document.getElementById("barChart"),{
+
+type:"bar",
+
+data:{
+
+labels:["Users","Reports"],
+
+datasets:[{
+
+label:"Count",
+
+data:[
+{ total_users },
+{ total_reports }
+]
+
+}]
+
+}
+
+});
+
+</script>
 </body>
 </html>
