@@ -807,6 +807,14 @@ def export_excel():
     ] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
     return response
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    flash("Logged out successfully!", "success")
+
+    return redirect("/login")
 
 @app.route("/logout")
 def logout():
