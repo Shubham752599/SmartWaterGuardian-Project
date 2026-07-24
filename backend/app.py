@@ -157,6 +157,7 @@ def login():
 
            session["user_id"] = user[0]
            session["user_name"] = user[1]
+           session["role"] = user[4]
 
            return redirect("/dashboard")
 
