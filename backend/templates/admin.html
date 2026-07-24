@@ -76,7 +76,29 @@
             <td>{{ report[2] }}</td>
             <td>{{ report[3] }}</td>
             <td>{{ report[4] }}</td>
-            <td>{{ report[6] }}</td>
+            <td>
+
+            {% if report[6] == "Pending" %}
+
+            <span style="background:#facc15;color:black;padding:6px 12px;border-radius:20px;">
+             Pending
+            </span>
+
+            {% elif report[6] == "In Progress" %}
+
+            <span style="background:#3b82f6;color:white;padding:6px 12px;border-radius:20px;">
+            In Progress
+            </span>
+
+            {% else %}
+
+            <span style="background:#22c55e;color:white;padding:6px 12px;border-radius:20px;">
+            Resolved
+            </span>
+
+            {% endif %}
+
+            </td>
             <td>{{ report[7] }}</td>
             <td>
 
