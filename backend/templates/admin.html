@@ -43,10 +43,32 @@
             <td>{{ report[4] }}</td>
             <td>{{ report[6] }}</td>
             <td>{{ report[7] }}</td>
+            <td>
+
+            <form action="/update_status/{{ report[0] }}" method="POST">
+
+            <select name="status">
+
+            <option value="Pending">Pending</option>
+
+            <option value="In Progress">In Progress</option>
+
+            <option value="Resolved">Resolved</option>
+
+            </select>
+
+            <button type="submit">
+            Update
+            </button>
+
+            </form>
+
+            </td>
         </tr>
         {% endfor %}
 
     </table>
+    <th>Action</th>
 
 </body>
 </html>

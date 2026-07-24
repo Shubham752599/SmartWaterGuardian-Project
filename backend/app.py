@@ -349,6 +349,8 @@ def admin():
         reports=reports
     )
 
+
+
 @app.route("/dashboard")
 def dashboard():
 
@@ -570,40 +572,37 @@ def edit(id):
 
     return render_template("edit_report.html", report=report)
 
-@app.route("/update_status/<int:id>")
-def update_status(id):
+@app.route("/update_status/<int:report_id>", methods=["POST"])
+def update_status(report_id):
 
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    status = request.form["status"]
 
     conn = get_db()
     cur = conn.cursor()
 
-    # Current Status
-    cur.execute("SELECT status FROM reports WHERE id=%s", (id,))
-    status = cur.fetchone()[0]
-
-    # Change Status
-    if status == "Pending":
-        new_status = "In Progress"
-
-    elif status == "In Progress":
-        new_status = "Resolved"
-
-    else:
-        new_status = "Pending"
-
     cur.execute(
-        "UPDATE reports SET status=%s WHERE id=%s",
-        (new_status, id)
+        """
+        UPDATE reports
+        SET status=%s
+        WHERE id=%s
+        """,
+        (status, report_id)
     )
 
     conn.commit()
+
     cur.close()
     conn.close()
-    flash("🔄 Status Updated Successfully!", "success")
 
-    return redirect("/dashboard")
+    flash("✅ Status Updated Successfully!", "success")
+
+    return redirect("/admin")
 
 @app.route("/export_pdf")
 def export_pdf():
