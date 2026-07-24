@@ -2,8 +2,16 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <div class="dashboard">
+
+    <h1>👑 Admin Dashboard</h1>
+
+    <h3>Welcome {{ username }}</h3>
+
+    <hr>
 
     <h1>👑 Admin Dashboard</h1>
 
@@ -13,7 +21,34 @@
 
     <h2>Statistics</h2>
 
-    <p>Total Users : {{ total_users }}</p>
+    <div class="stats">
+
+<div class="stat-card">
+<h2>{{ total_users }}</h2>
+<p>Total Users</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ total_reports }}</h2>
+<p>Total Reports</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ pending }}</h2>
+<p>Pending</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ inprogress }}</h2>
+<p>In Progress</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ resolved }}</h2>
+<p>Resolved</p>
+</div>
+
+</div>
     <p>Total Reports : {{ total_reports }}</p>
     <p>Pending : {{ pending }}</p>
     <p>In Progress : {{ inprogress }}</p>
@@ -23,7 +58,7 @@
 
     <h2>All Reports</h2>
 
-    <table border="1" cellpadding="10">
+    <table class="report-table">
         <tr>
             <th>ID</th>
             <th>Name</th>
@@ -72,3 +107,4 @@
 
 </body>
 </html>
+</div>
