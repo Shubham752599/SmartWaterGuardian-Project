@@ -340,7 +340,7 @@ def admin():
 
     return render_template(
         "admin.html",
-        username=session["user"],
+        username=session["user_name"],
         total_users=total_users,
         total_reports=total_reports,
         pending=pending,
