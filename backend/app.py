@@ -296,43 +296,69 @@ def admin():
     if session["role"] != "admin":
         return redirect("/dashboard")
 
+    search = request.args.get("search", "")
+
     conn = get_db()
     cur = conn.cursor()
 
-    # Total Users
+    # =======================
+    # Dashboard Statistics
+    # =======================
+
     cur.execute("SELECT COUNT(*) FROM users")
     total_users = cur.fetchone()[0]
 
-    # Total Reports
     cur.execute("SELECT COUNT(*) FROM reports")
     total_reports = cur.fetchone()[0]
 
-    # Pending
     cur.execute("SELECT COUNT(*) FROM reports WHERE status='Pending'")
     pending = cur.fetchone()[0]
 
-    # In Progress
     cur.execute("SELECT COUNT(*) FROM reports WHERE status='In Progress'")
     inprogress = cur.fetchone()[0]
 
-    # Resolved
     cur.execute("SELECT COUNT(*) FROM reports WHERE status='Resolved'")
     resolved = cur.fetchone()[0]
 
-    # All Reports
-    cur.execute("""
-        SELECT id,
-               fullname,
-               city,
-               leakage_type,
-               mobile,
-               image,
-               status,
-               created_at
-        FROM reports
-        ORDER BY id DESC
-    """)
+    # =======================
+    # Search Reports
+    # =======================
 
+    query = """
+    SELECT id,
+           fullname,
+           city,
+           leakage_type,
+           mobile,
+           image,
+           status,
+           created_at
+    FROM reports
+    WHERE 1=1
+    """
+
+    params = []
+
+    if search:
+        query += """
+        AND (
+            fullname LIKE %s
+            OR city LIKE %s
+            OR mobile LIKE %s
+            OR leakage_type LIKE %s
+        )
+        """
+
+        params.extend([
+            "%" + search + "%",
+            "%" + search + "%",
+            "%" + search + "%",
+            "%" + search + "%"
+        ])
+
+    query += " ORDER BY id DESC"
+
+    cur.execute(query, tuple(params))
     reports = cur.fetchall()
 
     cur.close()
@@ -346,7 +372,8 @@ def admin():
         pending=pending,
         inprogress=inprogress,
         resolved=resolved,
-        reports=reports
+        reports=reports,
+        search=search
     )
 
 
