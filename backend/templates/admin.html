@@ -71,6 +71,10 @@
             <td>{{ report[2] }}</td>
             <td>{{ report[3] }}</td>
             <td>{{ report[4] }}</td>
+            <a href="/{{ report[5] }}" target="_blank">
+            📷 View
+           </a>
+
             <td>
 
             {% if report[6] == "Pending" %}
@@ -133,7 +137,7 @@
         {% endfor %}
 
     </table>
-    <th>Action</th>
+    <th>Actions</th>
 
 </body>
 </html>
