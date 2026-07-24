@@ -375,7 +375,42 @@ def admin():
         reports=reports,
         search=search
     )
+@app.route("/users")
+def users():
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    search = request.args.get("search", "")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    query = """
+    SELECT id, fullname, email, role
+    FROM users
+    WHERE 1=1
+    """
+
+    params = []
+
+    if search:
+        query += " AND (fullname LIKE %s OR email LIKE %s)"
+        params.append("%" + search + "%")
+        params.append("%" + search + "%")
+
+    query += " ORDER BY id DESC"
+
+    cur.execute(query, tuple(params))
+    users = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template("users.html", users=users, search=search)
 
 
 @app.route("/dashboard")
@@ -526,6 +561,31 @@ def view_report(id):
         "view_report.html",
         report=report
     )
+@app.route("/delete_user/<int:id>")
+def delete_user(id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    if id == session["user_id"]:
+        flash("You cannot delete your own account.", "error")
+        return redirect("/users")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM users WHERE id=%s", (id,))
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    flash("User Deleted Successfully!", "success")
+
+    return redirect("/users")
 
 @app.route("/delete_report/<int:id>")
 def delete_report(id):
