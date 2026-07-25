@@ -816,13 +816,6 @@ def logout():
 
     return redirect("/login")
 
-@app.route("/logout")
-def logout():
-
-    session.pop("user", None)
-
-    return redirect("/")
-
 @app.route("/testdb")
 
 def testdb():
