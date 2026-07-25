@@ -887,7 +887,81 @@ def forgot_password():
             )
 
     return render_template("forgot_password.html")     
+import csv
+from flask import Response
 
+@app.route("/export_csv")
+def export_csv():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id,
+               fullname,
+               mobile,
+               city,
+               leakage_type,
+               status,
+               created_at
+        FROM reports
+    """)
+
+    reports = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    def generate():
+
+        data = csv.writer(open("temp.csv","w"))
+
+        yield "ID,Name,Mobile,City,Leakage,Status,Date\n"
+
+        for row in reports:
+            yield ",".join(str(x) for x in row) + "\n"
+
+    return Response(
+        generate(),
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition":
+            "attachment;filename=reports.csv"
+        }
+    )
+@app.route("/report/<int:id>")
+def report_details():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session["role"] != "admin":
+        return redirect("/dashboard")
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM reports
+        WHERE id=%s
+    """, (id,))
+
+    report = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "report_details.html",
+        report=report
+    )
 
 if __name__ == "__main__":
     app.run(

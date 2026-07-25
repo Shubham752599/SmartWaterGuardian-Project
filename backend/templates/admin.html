@@ -25,6 +25,9 @@
             <a href="/logout" class="btn btn-danger">
                 🚪 Logout
             </a>
+            <a href="/export_csv" class="btn btn-success">
+            📥 Export CSV
+            </a>
         </div>
 
     </div>
@@ -143,7 +146,29 @@
         </div>
 
     </form>
+<div class="row mt-5">
 
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="text-center">Report Status</h4>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="text-center">System Overview</h4>
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br>
     <!-- Reports Table -->
 
     <table class="table table-bordered table-hover table-striped shadow">
@@ -209,8 +234,11 @@
 
             <td>
 
-                <a href="/{{ report[5] }}" target="_blank" class="btn btn-sm btn-info">
-                    📷
+                <a href="/report/{{ report[0] }}"
+                class="btn btn-info btn-sm">
+
+                View
+
                 </a>
 
                 <a href="/update_status/{{ report[0] }}" class="btn btn-sm btn-warning">

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Report Details</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2 class="mb-4">
+
+Leakage Report Details
+
+</h2>
+
+<p><b>ID :</b> {{ report[0] }}</p>
+
+<p><b>Name :</b> {{ report[2] }}</p>
+
+<p><b>Mobile :</b> {{ report[3] }}</p>
+
+<p><b>Address :</b> {{ report[4] }}</p>
+
+<p><b>City :</b> {{ report[5] }}</p>
+
+<p><b>Leakage :</b> {{ report[6] }}</p>
+
+<p><b>Description :</b></p>
+
+<p>{{ report[7] }}</p>
+
+<p>
+
+<img src="/static/uploads/{{ report[8] }}"
+width="350"
+class="img-thumbnail">
+
+</p>
+
+<p>
+
+<b>Status :</b>
+
+{{ report[9] }}
+
+</p>
+
+<p>
+
+<b>Date :</b>
+
+{{ report[10] }}
+
+</p>
+
+<a href="/admin"
+class="btn btn-primary">
+
+⬅ Back
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
