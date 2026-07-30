@@ -370,24 +370,6 @@ function updateClock(){
 setInterval(updateClock,1000);
 
 updateClock();
-window.onload = function(){
-
-    document.getElementById("loader").style.display = "none";
-
-    if(localStorage.getItem("theme")=="dark"){
-
-        document.body.classList.add("dark-mode");
-
-        const btn=document.getElementById("themeBtn");
-
-        if(btn){
-            btn.innerHTML="☀";
-        }
-    }
-
-    updateClock();
-
-}
 
 // Auto Refresh Every 30 Seconds
 setTimeout(function () {
@@ -447,18 +429,6 @@ function toggleTheme(){
 
 }
 
-window.onload=function(){
-
-    if(localStorage.getItem("theme")=="dark"){
-
-        document.body.classList.add("dark-mode");
-
-        document.getElementById("themeBtn").innerHTML="☀ Light Mode";
-
-    }
-
-}
-
 </script>
 <!-- Image Modal -->
 
@@ -472,23 +442,7 @@ window.onload=function(){
 
 <script>
 
-function toggleTheme(){
 
-    document.body.classList.toggle("dark-mode");
-
-    if(document.body.classList.contains("dark-mode")){
-
-        localStorage.setItem("theme","dark");
-        document.getElementById("themeBtn").innerHTML="☀";
-
-    }else{
-
-        localStorage.setItem("theme","light");
-        document.getElementById("themeBtn").innerHTML="🌙";
-
-    }
-
-}
 
 window.onload = function () {
 
@@ -510,6 +464,7 @@ window.onload = function () {
         }
 
     }
+    updateClock();
 
 }
 const topBtn = document.getElementById("topBtn");
