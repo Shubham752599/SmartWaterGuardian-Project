@@ -138,12 +138,16 @@ def login():
         conn = get_db()
         cur = conn.cursor()
 
+        cur.execute("SHOW COLUMNS FROM users")
+        print("Columns:", cur.fetchall())
+
         cur.execute(
-            "SELECT * FROM users WHERE email=%s",
-            (email,)
-        )
+           "SELECT * FROM users WHERE email=%s",
+           (email,)
+)
 
         user = cur.fetchone()
+        print("User:", user)
 
         cur.close()
         conn.close()
