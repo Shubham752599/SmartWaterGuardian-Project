@@ -160,7 +160,12 @@ def login():
             session["user_name"] = user[1]
 
             # role NULL ho to default user
-            role = user[4] if user[4] else "user"
+            print(user)
+
+            if len(user) < 5:
+               return f"User tuple has only {len(user)} values: {user}"
+
+            role = user[4]
             session["role"] = role
 
             if role == "admin":
