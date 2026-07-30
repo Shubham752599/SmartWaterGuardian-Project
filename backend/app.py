@@ -144,34 +144,36 @@ def login():
         )
 
         user = cur.fetchone()
-        print(user)
-
-        if user:
-           print(user[3])
-           print(password)
 
         cur.close()
         conn.close()
 
+        print(user)
+
+        if user:
+            print(user[3])
+            print(password)
+
         if user and check_password_hash(user[3], password):
 
-           session["user_id"] = user[0]
-           session["user_name"] = user[1]
-           session["role"] = user[4]
-           if session["role"] == "admin":
-               return redirect("/admin")
+            session["user_id"] = user[0]
+            session["user_name"] = user[1]
 
-           return redirect("/dashboard")
+            # role NULL ho to default user
+            role = user[4] if user[4] else "user"
+            session["role"] = role
 
-        else:
+            if role == "admin":
+                return redirect("/admin")
+            else:
+                return redirect("/dashboard")
 
-           return render_template(
-        "login.html",
-        error="❌ Invalid Email or Password"
-    )
+        return render_template(
+            "login.html",
+            error="❌ Invalid Email or Password"
+        )
 
-    return render_template("login.html", error="")
-
+    return render_template("login.html")
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -187,9 +189,9 @@ def register():
 
         try:
             cur.execute("""
-                INSERT INTO users(fullname, email, password)
-                VALUES(%s, %s, %s)
-            """, (fullname, email, hashed_password))
+                INSERT INTO users(fullname, email, password,role)
+                VALUES(%s, %s, %s, %s)
+            """, (fullname, email, hashed_password, "user"))
 
             conn.commit()
 
